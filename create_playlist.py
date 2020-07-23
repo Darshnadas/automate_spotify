@@ -84,7 +84,7 @@ class CreatePlaylist:
         response = requests.get(
             query,
             headers = {
-                "Content-Type":"application/jason",
+                "Content-Type":"application/json",
                 "Authorization":"Bearer {}".format(spotify_token)
             }
         )    
