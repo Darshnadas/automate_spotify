@@ -1,16 +1,48 @@
+import os
 import json
 
 import requests
 
+import google_auth_outhlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
+import requests
+import youtube_dl
+
+from exceptions import ResponseException
+from secrets import spotify_token,spotify_user_id
 
 class CreatePlaylist:
     
     def __init__(self):
-        pass
+        self.youtube_client = self.get_youtube_client()
+        
 
 #Step 1: Log Into YouTube
     def get_youtube_client(self):
-        pass
+        """Log into Youtube"""
+        os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = '1'
+
+        api_service_name = "youtube"
+        api_version = "v3"
+        client_secrets_file = "client_secret.json"
+
+        #Get credentials and create an API client
+        scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+        flow = google_auth_outhlib.flow.InstalledAppFlow.from_client_secrets.file(
+            client_secrets_file, scopes
+        )
+        credentials = flow.run_console()
+
+        #from Youtube Data API
+        youtube_client = googleapiclient.discovery.build(
+            api_service_name,api_version,credentials=credentials
+        )
+
+        return youtube_client  
+
+
+        
 
 #Step 2: Grab our liked videos
     def get_liked_videos(self):
@@ -26,13 +58,13 @@ class CreatePlaylist:
 
         })
 
-        query = "https://api.spotify.com/v1/users/{}/playlists".format(self.user_id)
+        query = "https://api.spotify.com/v1/users/{}/playlists".format(spotify_user_id)
         response = requests.post(
             query,
             data = request_body,
             headers = {
                 "Content-Type":"application/json",
-                "Authorization":"Bearer {}".format(spotify_id)
+                "Authorization":"Bearer {}".format(spotify_token)
             }
         )
         response_json = response.json()
@@ -62,6 +94,3 @@ class CreatePlaylist:
         uri = songs[0]['uri']
 
         return uri  
-
-
-        )
