@@ -31,13 +31,13 @@ class CreatePlaylist:
             query,
             data = request_body,
             headers = {
-                "Content-Type":"application/jason",
+                "Content-Type":"application/json",
                 "Authorization":"Bearer {}".format(spotify_id)
             }
         )
-        response_json = response.jason()
+        response_json = response.json()
 
-        return response._jason("id")
+        return response_json("id")
         
 
 
@@ -51,7 +51,6 @@ class CreatePlaylist:
         )
         response = requests.get(
             query,
-            data = request_body,
             headers = {
                 "Content-Type":"application/jason",
                 "Authorization":"Bearer {}".format(spotify_token)
